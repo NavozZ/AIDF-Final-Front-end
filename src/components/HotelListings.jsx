@@ -22,17 +22,17 @@ function HotelListings() {
         });
 
   return (
-    <section className="px-8 py-8 lg:py-12 backdrop-blur-md bg-white/30 rounded-xl shadow-xl">
+    <section className="px-6 md:px-10 lg:px-16 py-12 backdrop-blur-md bg-white/30 rounded-xl shadow-xl">
       {/* Heading */}
-      <div className="mb-12 text-center">
-        <h2 className="text-4xl font-bold text-black mb-4">Top Trending Hotels Worldwide</h2>
-        <p className="text-lg text-black/70">
-          Discover the most trending hotels worldwide for an unforgettable experience.
+      <div className="text-center mb-16">
+        <h2 className="text-5xl font-extrabold text-white mb-4">Top Trending Hotels Worldwide</h2>
+        <p className="text-lg text-white-700 max-w-3xl mx-auto">
+          Explore our collection of top-rated hotels across the globe. Find the perfect place for an unforgettable stay.
         </p>
       </div>
 
       {/* Location Tabs */}
-      <div className="flex items-center flex-wrap gap-x-4 mb-8 justify-center">
+      <div className="flex items-center flex-wrap gap-6 mb-12 justify-center">
         {locations.map((location) => {
           return (
             <LocationTab
@@ -46,7 +46,7 @@ function HotelListings() {
       </div>
 
       {/* Hotel Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12">
         {filteredHotels.map((hotel) => {
           return <HotelCard key={hotel._id} hotel={hotel} />;
         })}
