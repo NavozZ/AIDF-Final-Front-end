@@ -4,6 +4,8 @@ import HotelListings from "../components/HotelListings";
 
 function HomePage() {
 
+  
+
   return (
     <>
       <main>

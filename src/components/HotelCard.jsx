@@ -1,6 +1,6 @@
 import { MapPin, Star } from "lucide-react";
 import { Button } from "./ui/button";
-import { Link } from "react-router"; // Import Link
+import { Link } from "react-router"; // Make sure this is the correct import for react-router
 
 function HotelCard(props) {
   return (
