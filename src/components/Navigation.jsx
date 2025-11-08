@@ -1,10 +1,14 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, Globe, X } from "lucide-react";
-import { Link } from "react-router"; // Change here
+import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
+import { Globe, Menu, X } from "lucide-react";
+import { useState } from "react";
+import { Link } from "react-router";
+import { useSelector } from "react-redux";
 
 function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // const count = useSelector((state) => state.counter);
 
   return (
     <nav className="bg-gray-900 text-white py-4 px-6 sm:px-8 flex items-center justify-between shadow-lg transition-all duration-300 backdrop-blur-md">
@@ -24,18 +28,27 @@ function Navigation() {
         {/* Links for Desktop */}
         <div className="hidden md:flex space-x-6">
           <Link to="/" className="hover:text-gray-200">Home</Link>
-          <Link to="/book-hotel" className="hover:text-gray-200">Book Hotel</Link>
-          <Link to="/destinations" className="hover:text-gray-200">Destinations</Link>
+          
+          {/* <p>{count}</p> */}
         </div>
 
         {/* Log In and Sign Up Buttons */}
         <div className="flex items-center space-x-6">
-          <Button variant="ghost" size="sm" className="text-xs hover:text-gray-300 transition-all duration-300">
-            <Link to="/sign-in" className="hover:text-black">Log In</Link>
-          </Button>
-          <Button size="sm" className="bg-white text-black hover:bg-gray-200 text-xs transition-all duration-300">
-            <Link to="/sign-up">Sign Up</Link>
-          </Button>
+          <SignedOut>
+            <Button variant="ghost" size="sm" className="text-xs hover:text-gray-300 transition-all duration-300">
+              <Link to="/sign-in" className="hover:text-black">Log In</Link>
+            </Button>
+            <Button size="sm" className="bg-white text-black hover:bg-gray-200 text-xs transition-all duration-300">
+              <Link to="/sign-up">Sign Up</Link>
+            </Button>
+          </SignedOut>
+
+          <SignedIn>
+            <UserButton />
+            <Button size="sm" className="bg-white text-black hover:bg-gray-200 text-xs transition-all duration-300">
+              <Link to="/account">My Account</Link>
+            </Button>
+          </SignedIn>
         </div>
       </div>
 
@@ -69,16 +82,29 @@ function Navigation() {
                 Company
               </Link>
               <div className="h-px bg-white/30 my-2"></div>
+
+              {/* Language Button */}
               <Button variant="ghost" size="sm" className="justify-start h-8 px-3 text-sm font-medium">
                 <Globe className="h-4 w-4 mr-2" />
                 EN
               </Button>
-              <Link to="/sign-in" className="text-sm font-medium hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>
-                Log In
-              </Link>
-              <Button size="sm" className="bg-white text-black hover:bg-gray-200 w-full mt-3" asChild onClick={() => setIsMenuOpen(false)}>
-                <Link to="/sign-up">Sign Up</Link>
-              </Button>
+
+              {/* Log In and Sign Up Buttons in Mobile Menu */}
+              <SignedOut>
+                <Link to="/sign-in" className="text-sm font-medium hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>
+                  Log In
+                </Link>
+                <Button size="sm" className="bg-white text-black hover:bg-gray-200 w-full mt-3" asChild onClick={() => setIsMenuOpen(false)}>
+                  <Link to="/sign-up">Sign Up</Link>
+                </Button>
+              </SignedOut>
+
+              {/* Signed In Account Button */}
+              <SignedIn>
+                <Link to="/account" className="text-sm font-medium hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>
+                  My Account
+                </Link>
+              </SignedIn>
             </div>
           </div>
         )}

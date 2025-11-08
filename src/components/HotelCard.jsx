@@ -1,12 +1,12 @@
 import { MapPin, Star } from "lucide-react";
 import { Button } from "./ui/button";
-import { Link } from "react-router"; // Make sure this is the correct import for react-router
+import { Link } from "react-router";
 
 function HotelCard(props) {
   return (
     <Link
-      to={`/hotels/${props.hotel._id}`} // Convert href to to
-      className="block group relative w-[320px] h-[460px] overflow-hidden rounded-xl shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+      to={`/hotels/${props.hotel._id}`}
+      className="block group relative w-[320px] h-[460px] overflow-hidden rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl"
     >
       {/* Hotel Image */}
       <div className="relative w-full h-[75%] overflow-hidden rounded-xl">
@@ -19,17 +19,17 @@ function HotelCard(props) {
 
       {/* Hotel Information */}
       <div className="absolute bottom-0 w-full p-6 bg-gradient-to-t from-black via-transparent to-transparent text-white">
-        <h3 className="font-semibold text-xl mb-2">{props.hotel.name}</h3>
+        <h3 className="font-semibold text-2xl mb-2">{props.hotel.name}</h3>
 
         {/* Location */}
         <div className="flex items-center text-sm mt-1">
-          <MapPin className="h-4 w-4 mr-1" />
+          <MapPin className="h-4 w-4 mr-2 text-yellow-400" />
           <span>{props.hotel.location}</span>
         </div>
 
         {/* Rating */}
         <div className="flex items-center space-x-1 mt-2">
-          <Star className="h-4 w-4 fill-primary text-primary" />
+          <Star className="h-5 w-5 text-yellow-500" />
           <span className="font-medium">{props.hotel?.rating ?? "No rating"}</span>
           <span className="text-sm text-gray-300">
             ({props.hotel.reviews?.length ?? "No"} Reviews)

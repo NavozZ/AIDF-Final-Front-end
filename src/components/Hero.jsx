@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import AISearch from "./AISearch";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react"; // Added custom icons
 
@@ -36,7 +37,7 @@ export default function Hero() {
           </p>
 
           {/* Search Form */}
-          <form onSubmit={handleSearch} className="w-full max-w-lg">
+          {/* <form onSubmit={handleSearch} className="w-full max-w-lg">
             <div className="relative flex items-center">
               <Input
                 type="text"
@@ -52,7 +53,8 @@ export default function Hero() {
                 <span className="text-sm">Search</span>
               </button>
             </div>
-          </form>
+          </form> */}
+          <AISearch />
         </div>
 
         {/* Right Side: Add GIF or Image */}

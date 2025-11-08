@@ -1,14 +1,14 @@
-
 import Navigation from "../Navigation";
 import { Outlet } from "react-router";
 
-function RootLayoutPage() {
+function RootLayout() {
   return (
     <>
-          <Navigation />
-          <Outlet />
+      <Navigation />
+      <Outlet />
+      
     </>
   );
 }
 
-export default RootLayoutPage;
+export default RootLayout;
