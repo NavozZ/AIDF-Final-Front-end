@@ -59,6 +59,7 @@ export const api = createApi({
       });
     },
   }),
+  tagTypes: ["Booking"],
   endpoints: (build) => ({
     getAllHotels: build.query({
       query: () => "hotels",
@@ -89,8 +90,28 @@ export const api = createApi({
         body: review,
       }),
     }),
+    createBooking: build.mutation({
+      query: (bookingData) => ({
+        url: "bookings", // POST /api/bookings
+        method: "POST",
+        body: bookingData,
+      }),
+      invalidatesTags: ["Booking"], // Mark Booking cache as stale
+    }),
+    createCheckoutSession: build.mutation({
+      query: (data) => ({
+        url: "payments/create-checkout-session", // POST /api/payments/create-checkout-session
+        method: "POST",
+        body: data, // Expects { bookingId: "<mongo_id>" }
+      }),
+    }),
+    
     getAllLocations: build.query({
       query: () => "locations",
+    }),
+    getCheckoutSessionStatus: build.query({
+      query: (sessionId) => `payments/session-status?session_id=${sessionId}`,
+      providesTags: ["Booking"],
     }),
   }),
 });
@@ -104,4 +125,7 @@ export const {
   useGetAllLocationsQuery,
   useAddReviewMutation,
   useCreateHotelMutation,
+  useCreateBookingMutation,
+  useCreateCheckoutSessionMutation,
+  useGetCheckoutSessionStatusQuery,
 } = api;

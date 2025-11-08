@@ -1,26 +1,34 @@
-import { useParams } from "react-router";
-import { hotels } from "../data.js";
+import { useParams, useNavigate } from "react-router";
+import { useState } from "react";
+
+import { Calendar as CalendarIcon } from "lucide-react";
+import { format } from "date-fns"; 
+import { cn } from "@/lib/utils"; // Your utility for class merging
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+
+
 import { Badge } from "@/components/ui/badge";
-import { MapPin } from "lucide-react";
+import { MapPin, Star, Wifi, Building2, Tv, Coffee, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Star } from "lucide-react";
-import { Wifi } from "lucide-react";
-import { Building2 } from "lucide-react";
-import { Tv } from "lucide-react";
-import { Coffee } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { useGetHotelByIdQuery } from "@/lib/api";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useUser } from "@clerk/clerk-react";
-import { useAddReviewMutation } from "@/lib/api";
-import { PlusCircle } from "lucide-react";
+
+import { useGetHotelByIdQuery, useAddReviewMutation, useCreateBookingMutation } from "@/lib/api";
 
 const HotelDetailsPage = () => {
   const { _id } = useParams();
-  const { data: hotel, isLoading, isError, error } = useGetHotelByIdQuery(_id);
-  const [addReview, { isLoading: isAddReviewLoading }] = useAddReviewMutation();
+  const navigate = useNavigate();
 
+  const { data: hotel, isLoading, isError, error } = useGetHotelByIdQuery(_id);
   const { user } = useUser();
+
+  const [addReview, { isLoading: isAddReviewLoading }] = useAddReviewMutation();
+  const [createBooking, { isLoading: isCreateBookingLoading }] = useCreateBookingMutation();
+
+  // NEW: Date state
+  const [dates, setDates] = useState({ from: undefined, to: undefined });
 
   const handleAddReview = async () => {
     try {
@@ -32,43 +40,37 @@ const HotelDetailsPage = () => {
     } catch (error) {}
   };
 
+  // Booking handler
+  const handleBook = async () => {
+    if (!dates.from || !dates.to) {
+      alert("Please select both check-in and check-out dates.");
+      return;
+    }
+
+    try {
+      const bookingDetails = {
+        hotelId: _id,
+        checkInDate: dates.from.toISOString(),
+        checkOutDate: dates.to.toISOString(),
+      };
+
+      const result = await createBooking(bookingDetails).unwrap();
+      const newBookingId = result._id;
+
+      navigate(`/booking/payment?bookingId=${newBookingId}`);
+    } catch (error) {
+      alert(`Booking failed: ${error.data?.message || "Unknown error"}`);
+    }
+  };
+
   if (isLoading) {
     return (
       <main className="px-4">
         <div className="grid md:grid-cols-2 gap-8">
-          <div className="space-y-4">
-            <div className="relative w-full h-[400px]">
-              <Skeleton className="w-full h-full rounded-lg" />
-            </div>
-            <div className="flex space-x-2">
-              <Skeleton className="h-6 w-24" />
-              <Skeleton className="h-6 w-24" />
-              <Skeleton className="h-6 w-24" />
-            </div>
+          <div className="relative w-full h-[400px]">
+            <Skeleton className="w-full h-full rounded-lg" />
           </div>
-          <div className="space-y-6">
-            <div className="flex justify-between items-start">
-              <div>
-                <Skeleton className="h-9 w-48" />
-                <div className="flex items-center mt-2">
-                  <Skeleton className="h-5 w-5 mr-1" />
-                  <Skeleton className="h-5 w-32" />
-                </div>
-              </div>
-              <Skeleton className="h-10 w-10 rounded-lg" />
-            </div>
-            <Skeleton className="h-6 w-36" />
-            <Skeleton className="h-24 w-full" />
-            <Card>
-              <CardContent className="p-4">
-                <Skeleton className="h-7 w-32 mb-4" />
-                <div className="grid grid-cols-2 gap-4">
-                  <Skeleton className="h-6 w-28" />
-                  <Skeleton className="h-6 w-28" />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          <Skeleton className="h-9 w-48" />
         </div>
       </main>
     );
@@ -77,13 +79,8 @@ const HotelDetailsPage = () => {
   if (isError) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center">
-        <h2 className="text-2xl font-bold text-destructive mb-4">
-          Error Loading Hotel Details
-        </h2>
-        <p className="text-muted-foreground">
-          {error?.data?.message ||
-            "Something went wrong. Please try again later."}
-        </p>
+        <h2 className="text-2xl font-bold text-destructive mb-4">Error Loading Hotel</h2>
+        <p className="text-muted-foreground">{error?.data?.message || "Try again later"}</p>
       </div>
     );
   }
@@ -91,85 +88,121 @@ const HotelDetailsPage = () => {
   return (
     <main className="px-4">
       <div className="grid md:grid-cols-2 gap-8">
+
+        {/* IMAGE + TAGS */}
         <div className="space-y-4">
           <div className="relative w-full h-[400px]">
-            <img
-              src={hotel.image}
-              alt={hotel.name}
-              className="absolute object-cover rounded-lg"
-            />
+            <img src={hotel.image} alt={hotel.name} className="object-cover rounded-lg w-full h-full" />
           </div>
-          <div className="flex space-x-2">
+          <div className="flex gap-2">
             <Badge variant="secondary">Rooftop View</Badge>
             <Badge variant="secondary">French Cuisine</Badge>
             <Badge variant="secondary">City Center</Badge>
           </div>
         </div>
+
+        {/* HOTEL DETAILS */}
         <div className="space-y-6">
-          <div className="flex justify-between items-start">
-            <div>
-              <h1 className="text-3xl font-bold">{hotel.name}</h1>
-              <div className="flex items-center mt-2">
-                <MapPin className="h-5 w-5 text-muted-foreground mr-1" />
-                <p className="text-muted-foreground">{hotel.location}</p>
-              </div>
+          <div>
+            <h1 className="text-3xl font-bold">{hotel.name}</h1>
+            <div className="flex items-center mt-2">
+              <MapPin className="h-5 w-5 text-muted-foreground mr-1" />
+              <p className="text-muted-foreground">{hotel.location}</p>
             </div>
-            <Button variant="outline" size="icon">
-              <Star className="h-4 w-4" />
-              <span className="sr-only">Add to favorites</span>
-            </Button>
           </div>
-          <div className="flex items-center space-x-1">
+
+          <div className="flex items-center space-x-2">
             <Star className="h-5 w-5 fill-primary text-primary" />
-            <span className="font-bold">{hotel?.rating ?? "No rating"}</span>
+            <span className="font-bold">{hotel.rating ?? "No Rating"}</span>
             <span className="text-muted-foreground">
-              ({hotel?.reviews.length === 0 ? "No" : hotel?.reviews.length}{" "}
-              reviews)
+              ({hotel.reviews?.length || 0} reviews)
             </span>
           </div>
+
           <p className="text-muted-foreground">{hotel.description}</p>
+
+          {/* AMENITIES */}
           <Card>
-            <CardContent className="p-4">
-              <h2 className="text-xl font-semibold mb-4">Amenities</h2>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex items-center">
-                  <Wifi className="h-5 w-5 mr-2" />
-                  <span>Free Wi-Fi</span>
-                </div>
-                <div className="flex items-center">
-                  <Building2 className="h-5 w-5 mr-2" />
-                  <span>Restaurant</span>
-                </div>
-                <div className="flex items-center">
-                  <Tv className="h-5 w-5 mr-2" />
-                  <span>Flat-screen TV</span>
-                </div>
-                <div className="flex items-center">
-                  <Coffee className="h-5 w-5 mr-2" />
-                  <span>Coffee maker</span>
-                </div>
-              </div>
+            <CardContent className="p-4 grid grid-cols-2 gap-4 text-sm">
+              <div className="flex items-center"><Wifi className="h-5 w-5 mr-2" /> Free Wi-Fi</div>
+              <div className="flex items-center"><Building2 className="h-5 w-5 mr-2" /> Restaurant</div>
+              <div className="flex items-center"><Tv className="h-5 w-5 mr-2" /> Flat-screen TV</div>
+              <div className="flex items-center"><Coffee className="h-5 w-5 mr-2" /> Coffee maker</div>
             </CardContent>
           </Card>
+
+          {/* DATE SELECTION - FIX APPLIED HERE */}
+          <Card className="p-4">
+            <CardContent className="p-0 space-y-4">
+              <h2 className="text-xl font-semibold">Select Dates</h2>
+
+              {/* === ACTUAL DATE PICKER IMPLEMENTATION === */}
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    id="date-range"
+                    variant={"outline"}
+                    className={cn(
+                      "w-full justify-start text-left font-normal",
+                      !dates.from && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {dates.from ? (
+                      dates.to ? (
+                        <>
+                          {format(dates.from, "LLL dd, y")} -{" "}
+                          {format(dates.to, "LLL dd, y")}
+                        </>
+                      ) : (
+                        format(dates.from, "LLL dd, y")
+                      )
+                    ) : (
+                      <span>Pick a date range</span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    initialFocus
+                    mode="range"
+                    defaultMonth={new Date()}
+                    selected={dates}
+                    onSelect={setDates}
+                    numberOfMonths={2}
+                    // Disable past dates
+                    disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+                  />
+                </PopoverContent>
+              </Popover>
+              {/* ======================================= */}
+              
+              <p className="text-center text-sm text-muted-foreground">
+                Check-in: {dates.from ? format(dates.from, "PPP") : "Select Date"} |
+                Check-out: {dates.to ? format(dates.to, "PPP") : "Select Date"}
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* BOOKING SECTION */}
           <div className="flex items-center justify-between">
             <div>
               <p className="text-2xl font-bold">${hotel.price}</p>
               <p className="text-sm text-muted-foreground">per night</p>
             </div>
+
             <Button
-              disabled={isAddReviewLoading}
-              className={`${isAddReviewLoading ? "opacity-50" : ""}`}
-              onClick={handleAddReview}
+              disabled={isCreateBookingLoading || !dates.from || !dates.to}
+              onClick={handleBook}
             >
-              <PlusCircle className="w-4 h-4" /> Add Review
+              {isCreateBookingLoading ? "Booking..." : "Book Now"}
             </Button>
-            {/* <BookingDialog
-              hotelName={hotel.name}
-              hotelId={id}
-              onSubmit={handleBook}
-              isLoading={isCreateBookingLoading}
-            /> */}
           </div>
+
+          {/* Review Button (kept) */}
+          <Button onClick={handleAddReview} disabled={isAddReviewLoading}>
+            <PlusCircle className="w-4 h-4" /> Add Review
+          </Button>
         </div>
       </div>
     </main>
