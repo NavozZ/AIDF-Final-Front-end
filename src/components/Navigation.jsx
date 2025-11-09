@@ -69,18 +69,6 @@ function Navigation() {
               <Link to="/" className="text-sm font-medium hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>
                 Home
               </Link>
-              <Link to="/book-hotel" className="text-sm font-medium hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>
-                Book Hotel
-              </Link>
-              <Link to="/destinations" className="text-sm font-medium hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>
-                Destinations
-              </Link>
-              <Link to="/policy" className="text-sm font-medium hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>
-                Policy
-              </Link>
-              <Link to="/company" className="text-sm font-medium hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>
-                Company
-              </Link>
               <div className="h-px bg-white/30 my-2"></div>
 
               {/* Language Button */}

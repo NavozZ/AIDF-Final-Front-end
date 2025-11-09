@@ -19,6 +19,7 @@ import CreateHotelPage from './Pages/admin/create-hotel.page';
 
 import PaymentPage from './Pages/booking/payment.page.jsx';
 import CompletePage from './Pages/booking/complete.page.jsx';
+import AccountDashboardPage from './Pages/AccountDashboard.page.jsx';
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
@@ -41,6 +42,10 @@ createRoot(document.getElementById("root")).render(
               <Route element={<ProtectLayout />}>
                 {/* ✅ Hotel Details */}
                 <Route path="/hotels/:_id" element={<HotelDetailsPage />} />
+
+                {/* --- TASK 2: ACCOUNT DASHBOARD ROUTE --- */}
+                <Route path="/account" element={<AccountDashboardPage />} />
+                {/* --------------------------------------- */}
 
                 {/* ✅ NEW BOOKING ROUTES */}
                 <Route path="/booking/payment" element={<PaymentPage />} />

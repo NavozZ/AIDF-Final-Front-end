@@ -113,6 +113,10 @@ export const api = createApi({
       query: (sessionId) => `payments/session-status?session_id=${sessionId}`,
       providesTags: ["Booking"],
     }),
+    getUserBookings: build.query({
+      query: (userId) => `bookings/user/${userId}`, // GET /api/bookings/user/:userId
+      providesTags: ["Booking"], // Provides tags for caching/invalidation
+    }),
   }),
 });
 
@@ -128,4 +132,5 @@ export const {
   useCreateBookingMutation,
   useCreateCheckoutSessionMutation,
   useGetCheckoutSessionStatusQuery,
+  useGetUserBookingsQuery,
 } = api;
