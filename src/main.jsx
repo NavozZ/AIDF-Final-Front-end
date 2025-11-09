@@ -20,6 +20,7 @@ import CreateHotelPage from './Pages/admin/create-hotel.page';
 import PaymentPage from './Pages/booking/payment.page.jsx';
 import CompletePage from './Pages/booking/complete.page.jsx';
 import AccountDashboardPage from './Pages/AccountDashboard.page.jsx';
+import AdminDashboardPage from './Pages/admin/admin-dashboard.page.jsx';
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
@@ -53,10 +54,11 @@ createRoot(document.getElementById("root")).render(
 
                 {/* ✅ Admin Routes */}
                 <Route element={<AdminProtectLayout />}>
-                  <Route
-                    path="/admin/create-hotel"
-                    element={<CreateHotelPage />}
-                  />
+                <Route path="/admin" element={<AdminDashboardPage />} /> 
+                <Route
+                      path="/admin/create-hotel"
+                      element={<CreateHotelPage />}
+                             />
                 </Route>
               </Route>
             </Route>
