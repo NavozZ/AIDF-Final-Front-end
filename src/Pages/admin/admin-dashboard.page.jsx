@@ -26,6 +26,13 @@ const AdminDashboardPage = () => {
                         <CardDescription>
                             Create, view, and edit hotel listings and pricing information.
                         </CardDescription>
+                        <Button asChild className="w-full" variant="secondary">
+                             <Link to="/admin/hotels" className="flex items-center justify-center">
+                             <ListChecks className="mr-2 h-4 w-4" />
+                             <span>Manage All Listings</span>
+                             </Link>
+                        </Button>
+
                         <Button asChild className="w-full">
                             <Link to="/admin/create-hotel">
                                 <PlusCircle className="mr-2 h-4 w-4" /> Create New Hotel
