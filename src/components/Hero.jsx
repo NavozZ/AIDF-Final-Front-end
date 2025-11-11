@@ -6,10 +6,6 @@ import { Search } from "lucide-react";
 export default function Hero() {
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    console.log("Search Triggered");
-  };
 
   return (
     <div className="relative h-[600px] overflow-hidden bg-black z-0">
