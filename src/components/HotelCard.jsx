@@ -1,53 +1,73 @@
-import { MapPin, Star } from "lucide-react";
+import { MapPin, Star, DollarSign } from "lucide-react";
 import { Button } from "./ui/button";
-import { Link } from "react-router";
+import { Link } from "react-router"; // Use 'react-router-dom' Link
 
 function HotelCard(props) {
+  // Use a card-like structure that flows well in a grid
   return (
     <Link
       to={`/hotels/${props.hotel._id}`}
-      className="block group relative w-[320px] h-[460px] overflow-hidden rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl"
+      // Removed fixed width/height. Uses 'group' for hover effects.
+      className="block group bg-white dark:bg-gray-800 rounded-xl shadow-lg 
+                 overflow-hidden transition-all duration-300 border border-transparent 
+                 hover:shadow-2xl hover:border-blue-500/50 hover:scale-[1.02]"
     >
-      {/* Hotel Image */}
-      <div className="relative w-full h-[75%] overflow-hidden rounded-xl">
+      {/* 1. Hotel Image (Fixed Aspect Ratio) */}
+      <div className="relative w-full h-48 overflow-hidden">
         <img
           src={props.hotel.image}
           alt={props.hotel.name}
-          className="object-cover w-full h-full absolute transition-transform group-hover:scale-110 group-hover:brightness-75"
+          // Object-cover ensures full coverage. Subtle hover effects.
+          className="object-cover w-full h-full transition-transform duration-500 
+                     group-hover:scale-105"
         />
       </div>
 
-      {/* Hotel Information */}
-      <div className="absolute bottom-0 w-full p-6 bg-gradient-to-t from-black via-transparent to-transparent text-white">
-        <h3 className="font-semibold text-2xl mb-2">{props.hotel.name}</h3>
-
-        {/* Location */}
-        <div className="flex items-center text-sm mt-1">
-          <MapPin className="h-4 w-4 mr-2 text-yellow-400" />
-          <span>{props.hotel.location}</span>
+      {/* 2. Hotel Information (Content Block) */}
+      <div className="p-4 space-y-3">
+        
+        {/* Name and Location (Top Block) */}
+        <div>
+          <h3 className="font-bold text-xl text-gray-900 dark:text-white truncate">
+            {props.hotel.name}
+          </h3>
+          <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mt-1">
+            <MapPin className="h-4 w-4 mr-1 text-blue-500" />
+            <span>{props.hotel.location}</span>
+          </div>
         </div>
 
-        {/* Rating */}
-        <div className="flex items-center space-x-1 mt-2">
-          <Star className="h-5 w-5 text-yellow-500" />
-          <span className="font-medium">{props.hotel?.rating ?? "No rating"}</span>
-          <span className="text-sm text-gray-300">
-            ({props.hotel.reviews?.length ?? "No"} Reviews)
-          </span>
+        {/* Rating and Price (Mid Block) */}
+        <div className="flex items-center justify-between border-t pt-3 border-gray-200 dark:border-gray-700">
+          
+          {/* Rating */}
+          <div className="flex items-center space-x-1">
+            <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
+            <span className="font-semibold text-lg text-gray-900 dark:text-white">
+              {props.hotel?.rating ?? "—"}
+            </span>
+            <span className="text-xs text-gray-500 dark:text-gray-400">
+              ({props.hotel.reviews?.length ?? "0"} Reviews)
+            </span>
+          </div>
+
+          {/* Price */}
+          <div className="flex flex-col items-end">
+            <span className="text-xl font-bold text-green-600 dark:text-green-400">
+              ${props.hotel.price}
+            </span>
+            <span className="text-xs text-gray-500 dark:text-gray-400">per night</span>
+          </div>
         </div>
 
-        {/* Price */}
-        <div className="flex items-baseline space-x-2 mt-3">
-          <span className="text-2xl font-bold">${props.hotel.price}</span>
-          <span className="text-sm text-gray-300">per night</span>
-        </div>
-
-        {/* Reserve Button */}
+        {/* Reserve Button (Bottom Block) */}
         <Button
           type="button"
-          className="w-full mt-4 py-2 text-lg font-semibold bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300"
+          // Use a full-width button styled with the primary brand color
+          className="w-full text-base font-semibold bg-blue-600 dark:bg-blue-600 
+                     hover:bg-blue-700 dark:hover:bg-blue-700 transition-colors duration-300 mt-2"
         >
-          Reserve Now
+          View Details
         </Button>
       </div>
     </Link>

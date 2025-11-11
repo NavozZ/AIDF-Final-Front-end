@@ -3,17 +3,22 @@ function LocationTab(props) {
     props.onClick(props.location);
   };
 
-  // Active location tab style with modern effects
+  // Active location tab style: Primary Blue background, strong shadow
+  // Assuming 'bg-primary' and 'shadow-blue-500/30' are defined or available.
   const activeTabStyles =
-    "bg-gradient-to-r from-blue-500 to-blue-700 text-white border-blue-500 shadow-lg transform scale-105 backdrop-blur-sm";
+    "bg-primary text-white border-primary-light shadow-xl shadow-blue-500/30 transform scale-[1.03] backdrop-blur-sm";
 
-  // Default inactive tab style
+  // Default inactive tab style: Dark background, subtle border, pronounced hover effect
   const inactiveTabStyles =
-    "bg-black/50 text-white border-gray-700 hover:bg-gray-800 hover:shadow-xl backdrop-blur-md";
+    "bg-gray-800 text-gray-300 border-gray-700 hover:bg-gray-700 hover:text-white hover:shadow-lg backdrop-blur-md";
 
+  // Base styles are kept clean and focus on accessibility (cursor, transition)
+  const baseStyles = 
+    "text-base font-medium rounded-full px-5 py-2 cursor-pointer whitespace-nowrap transition-all duration-300 ease-in-out";
+  
   return (
     <div
-      className={`text-base font-semibold border rounded-full px-6 py-3 cursor-pointer transition-all duration-300 ease-in-out 
+      className={`${baseStyles} 
         ${props.location._id === props.selectedLocation ? activeTabStyles : inactiveTabStyles}`}
       onClick={handleClick}
     >
