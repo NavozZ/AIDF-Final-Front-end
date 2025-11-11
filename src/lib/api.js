@@ -39,6 +39,14 @@ export const api = createApi({
       query: (id) => `hotels/${id}`,
       providesTags: (result, error, id) => [{ type: "Hotels", id }],
     }),
+    getBookingCount: build.query({
+      query: () => 'bookings/count', // GET /api/bookings/count
+      providesTags: ['Booking'],
+    }),
+    getUserCount: build.query({
+      query: () => 'users/count', // GET /api/users/count (Conceptual API)
+      providesTags: ['UserCount'],
+    }),
 
     createHotel: build.mutation({
       query: (hotel) => ({
@@ -48,6 +56,7 @@ export const api = createApi({
       }),
       invalidatesTags: [{ type: "Hotels", id: "LIST" }],
     }),
+    
 
     // ✅ New Update Hotel
     updateHotel: build.mutation({
@@ -133,4 +142,6 @@ export const {
   // ✅ Export new hooks
   useUpdateHotelMutation,
   useDeleteHotelMutation,
+  useGetBookingCountQuery,
+  useGetUserCountQuery,
 } = api;

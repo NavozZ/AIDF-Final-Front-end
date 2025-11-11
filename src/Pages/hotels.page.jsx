@@ -1,11 +1,16 @@
-const HotelPage = () => {
+import React from 'react';
+import HotelListings from '@/components/HotelListings'; 
+import Hero from '@/components/Hero';
+
+
+function HotelsPage() {
   return (
-    <>
+    <div className="min-h-screen">
       
-      <main className="pt-20 px-6 ">
-        <h1 className="text-3xl font-bold text-center text-black">Hotel Page</h1>
-      </main>
-    </>
+      <HotelListings />
+      
+    </div>
   );
-};
-export default HotelPage;
+}
+
+export default HotelsPage;

@@ -1,5 +1,3 @@
-// src/Pages/admin/edit-hotel.page.jsx
-
 import React from 'react';
 import { useParams } from 'react-router';
 import { useGetHotelByIdQuery, useUpdateHotelMutation } from '@/lib/api';
@@ -9,12 +7,12 @@ import { toast } from 'sonner';
 import { Edit3 } from 'lucide-react';
 
 const AdminEditHotelPage = () => {
-  const { id } = useParams(); // Get hotel ID from URL
+  const { id } = useParams(); 
   
-  // 1. Fetch current hotel data
+  
   const { data: hotel, isLoading, isError } = useGetHotelByIdQuery(id);
   
-  // 2. Setup update mutation
+  
   const [updateHotel, { isLoading: isUpdating }] = useUpdateHotelMutation();
 
   const handleSubmit = async (formData) => {
@@ -40,7 +38,7 @@ const AdminEditHotelPage = () => {
         <Edit3 className="mr-3 h-7 w-7" /> Edit Hotel: {hotel.name}
       </h1>
       <div className="max-w-3xl mx-auto">
-        {/* Reuse the CreateHotel component, passing initial data and the update function */}
+        
         <HotelCreateFrom 
           initialData={hotel} 
           onSubmit={handleSubmit} 

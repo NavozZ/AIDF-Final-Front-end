@@ -1,4 +1,4 @@
-// src/Pages/booking/payment.page.jsx
+
 
 import { Navigate, useSearchParams } from "react-router";
 import CheckoutForm from "@/components/CheckoutForm"; 
@@ -7,7 +7,7 @@ const PaymentPage = () => {
   const [searchParams] = useSearchParams();
   const bookingId = searchParams.get('bookingId');
   
-  // If no bookingId is present, the user navigated here incorrectly.
+
   if (!bookingId) {
     return <Navigate to="/hotels" />; 
   }

@@ -44,18 +44,13 @@ createRoot(document.getElementById("root")).render(
               <Route path="/hotels" element={<HotelsPage />} />
 
               <Route element={<ProtectLayout />}>
-                {/* ✅ Hotel Details */}
+                
                 <Route path="/hotels/:_id" element={<HotelDetailsPage />} />
-
-                {/* --- TASK 2: ACCOUNT DASHBOARD ROUTE --- */}
                 <Route path="/account" element={<AccountDashboardPage />} />
-                {/* --------------------------------------- */}
-
-                {/* ✅ NEW BOOKING ROUTES */}
+    
                 <Route path="/booking/payment" element={<PaymentPage />} />
                 <Route path="/booking/complete" element={<CompletePage />} />
 
-                {/* ✅ Admin Routes */}
                 <Route element={<AdminProtectLayout />}>
                 <Route path="/admin" element={<AdminDashboardPage />} /> 
                 <Route

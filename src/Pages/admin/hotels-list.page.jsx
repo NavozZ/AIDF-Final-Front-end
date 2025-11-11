@@ -1,5 +1,3 @@
-// src/Pages/admin/hotels-list.page.jsx
-
 import React from 'react';
 import { Link } from 'react-router';
 import { useGetAllHotelsQuery, useDeleteHotelMutation } from '@/lib/api';
