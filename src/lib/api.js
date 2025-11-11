@@ -1,44 +1,4 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-
-// const getAllHotels = async () => {
-//   try {
-//     const res = await fetch("http://localhost:8000/api/hotels", {
-//       method: "GET",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//     });
-//     if (!res.ok) {
-//       throw new Error("Failed to fetch hotels");
-//     }
-//     const data = await res.json();
-//     return data;
-//   } catch (error) {
-//     throw new Error(error.message);
-//   }
-// };
-
-// const getAllLocations = async () => {
-//   try {
-//     const res = await fetch("http://localhost:8000/api/locations", {
-//       method: "GET",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//     });
-//     if (!res.ok) {
-//       throw new Error("Failed to fetch locations");
-//     }
-//     const data = await res.json();
-//     return data;
-//   } catch (error) {
-//     throw new Error(error.message);
-//   }
-// };
-
-// export { getAllHotels, getAllLocations };
-
-// Define a service using a base URL and expected endpoints
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
@@ -63,6 +23,10 @@ export const api = createApi({
   endpoints: (build) => ({
     getAllHotels: build.query({
       query: () => "hotels",
+    }),
+    getHotelsBySearch: build.query({
+      query: (search) => `hotels/search?query=${search}`,
+      providesTags: (result, error, id) => [{ type: "Hotels", search }],
     }),
     getHotelById: build.query({
       query: (id) => `hotels/${id}`,
@@ -133,4 +97,5 @@ export const {
   useCreateCheckoutSessionMutation,
   useGetCheckoutSessionStatusQuery,
   useGetUserBookingsQuery,
+  useGetHotelsBySearchQuery,
 } = api;
