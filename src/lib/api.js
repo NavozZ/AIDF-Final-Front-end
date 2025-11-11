@@ -1,44 +1,4 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-
-// const getAllHotels = async () => {
-//   try {
-//     const res = await fetch("http://localhost:8000/api/hotels", {
-//       method: "GET",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//     });
-//     if (!res.ok) {
-//       throw new Error("Failed to fetch hotels");
-//     }
-//     const data = await res.json();
-//     return data;
-//   } catch (error) {
-//     throw new Error(error.message);
-//   }
-// };
-
-// const getAllLocations = async () => {
-//   try {
-//     const res = await fetch("http://localhost:8000/api/locations", {
-//       method: "GET",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//     });
-//     if (!res.ok) {
-//       throw new Error("Failed to fetch locations");
-//     }
-//     const data = await res.json();
-//     return data;
-//   } catch (error) {
-//     throw new Error(error.message);
-//   }
-// };
-
-// export { getAllHotels, getAllLocations };
-
-// Define a service using a base URL and expected endpoints
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
@@ -63,9 +23,15 @@ export const api = createApi({
   endpoints: (build) => ({
     getAllHotels: build.query({
       query: () => "hotels",
+    providesTags: (result, error, id) => [{ type: "Hotels", id: "LIST" }],
+    }),
+    getHotelsBySearch: build.query({
+      query: (search) => `hotels/search?query=${search}`,
+      providesTags: (result, error, search) => [{ type: "Hotels", search }],
     }),
     getHotelById: build.query({
       query: (id) => `hotels/${id}`,
+      providesTags: (result, error, id) => [{ type: "Hotels", id }],
     }),
     createHotel: build.mutation({
       query: (hotel) => ({
@@ -73,6 +39,11 @@ export const api = createApi({
         method: "POST",
         body: hotel,
       }),
+      invalidatesTags: (result, error, id) => [{ type: "Hotels", id: "LIST" }],
+    }),
+    getAllLocations: build.query({
+      query: () => "locations",
+      providesTags: (result, error, id) => [{ type: "Locations", id: "LIST" }],
     }),
     addLocation: build.mutation({
       query: (location) => ({
@@ -82,6 +53,9 @@ export const api = createApi({
           name: location.name,
         },
       }),
+      invalidatesTags: (result, error, id) => [
+        { type: "Locations", id: "LIST" },
+      ],
     }),
     addReview: build.mutation({
       query: (review) => ({
@@ -89,39 +63,38 @@ export const api = createApi({
         method: "POST",
         body: review,
       }),
+      invalidatesTags: (result, error, id) => [
+        { type: "Hotels", id: review.hotelId },
+      ],
     }),
     createBooking: build.mutation({
       query: (bookingData) => ({
-        url: "bookings", // POST /api/bookings
+        url: "bookings", 
         method: "POST",
         body: bookingData,
       }),
-      invalidatesTags: ["Booking"], // Mark Booking cache as stale
+      invalidatesTags: ["Booking"],
     }),
     createCheckoutSession: build.mutation({
       query: (data) => ({
-        url: "payments/create-checkout-session", // POST /api/payments/create-checkout-session
+        url: "payments/create-checkout-session", 
         method: "POST",
-        body: data, // Expects { bookingId: "<mongo_id>" }
+        body: data, 
       }),
     }),
     
-    getAllLocations: build.query({
-      query: () => "locations",
-    }),
+      
     getCheckoutSessionStatus: build.query({
       query: (sessionId) => `payments/session-status?session_id=${sessionId}`,
       providesTags: ["Booking"],
     }),
     getUserBookings: build.query({
-      query: (userId) => `bookings/user/${userId}`, // GET /api/bookings/user/:userId
-      providesTags: ["Booking"], // Provides tags for caching/invalidation
+      query: (userId) => `bookings/user/${userId}`,
+      providesTags: ["Booking"], 
     }),
   }),
 });
 
-// Export hooks for usage in functional components, which are
-// auto-generated based on the defined endpoints
 export const {
   useGetAllHotelsQuery,
   useGetHotelByIdQuery,
@@ -133,4 +106,5 @@ export const {
   useCreateCheckoutSessionMutation,
   useGetCheckoutSessionStatusQuery,
   useGetUserBookingsQuery,
+  useGetHotelsBySearchQuery,
 } = api;
