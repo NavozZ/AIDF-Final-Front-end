@@ -27,7 +27,7 @@ export const api = createApi({
     }),
     getHotelsBySearch: build.query({
       query: (search) => `hotels/search?query=${search}`,
-      providesTags: (result, error, id) => [{ type: "Hotels", search }],
+      providesTags: (result, error, search) => [{ type: "Hotels", search }],
     }),
     getHotelById: build.query({
       query: (id) => `hotels/${id}`,
@@ -63,39 +63,38 @@ export const api = createApi({
         method: "POST",
         body: review,
       }),
-    }),
-    createBooking: build.mutation({
-      query: (bookingData) => ({
-        url: "bookings", // POST /api/bookings
-        method: "POST",
-        body: bookingData,
-      }),
-      invalidatesTags: ["Booking"], // Mark Booking cache as stale
-    }),
-    createCheckoutSession: build.mutation({
-      query: (data) => ({
-        url: "payments/create-checkout-session", // POST /api/payments/create-checkout-session
-        method: "POST",
-        body: data, // Expects { bookingId: "<mongo_id>" }
-      }),
-    }),
-    
       invalidatesTags: (result, error, id) => [
         { type: "Hotels", id: review.hotelId },
       ],
+    }),
+    createBooking: build.mutation({
+      query: (bookingData) => ({
+        url: "bookings", 
+        method: "POST",
+        body: bookingData,
+      }),
+      invalidatesTags: ["Booking"],
+    }),
+    createCheckoutSession: build.mutation({
+      query: (data) => ({
+        url: "payments/create-checkout-session", 
+        method: "POST",
+        body: data, 
+      }),
+    }),
+    
+      
     getCheckoutSessionStatus: build.query({
       query: (sessionId) => `payments/session-status?session_id=${sessionId}`,
       providesTags: ["Booking"],
     }),
     getUserBookings: build.query({
-      query: (userId) => `bookings/user/${userId}`, // GET /api/bookings/user/:userId
-      providesTags: ["Booking"], // Provides tags for caching/invalidation
+      query: (userId) => `bookings/user/${userId}`,
+      providesTags: ["Booking"], 
     }),
   }),
 });
 
-// Export hooks for usage in functional components, which are
-// auto-generated based on the defined endpoints
 export const {
   useGetAllHotelsQuery,
   useGetHotelByIdQuery,

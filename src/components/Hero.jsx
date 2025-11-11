@@ -23,30 +23,11 @@ export default function Hero() {
       <div className="relative z-10 flex flex-col md:flex-row items-center justify-between h-full px-6 sm:px-12 space-y-8 md:space-y-0">
         <div className="text-center md:text-left md:max-w-lg md:ml-16 flex flex-col justify-center">
           <h1 className="text-5xl md:text-6xl font-extrabold text-white mb-4 leading-tight drop-shadow-lg">
-            Your Perfect Stay Awaits
+            Your Dream Stay Starts Here
           </h1>
           <p className="text-lg md:text-xl text-white opacity-80 mb-8 max-w-lg">
-            Explore top-rated hotels, unique accommodations, and personalized experiences to make your trip unforgettable. Let us find the perfect spot for you!
+            Discover exceptional stays, unique experiences, and top-rated hotels curated just for your journey. Let us help you choose the perfect place
           </p>
-
-          {/* Search Form */}
-          {/* <form onSubmit={handleSearch} className="w-full max-w-lg">
-            <div className="relative flex items-center">
-              <Input
-                type="text"
-                name="search"
-                placeholder="Where do you want to go?"
-                className="bg-[#2d2d2d] text-sm sm:text-base text-white placeholder:text-white/70 placeholder:text-sm sm:placeholder:text-base rounded-full py-4 pl-6 pr-12 sm:pr-24 w-full transition-all focus:outline-none focus:ring-2 focus:ring-purple-600"
-              />
-              <button
-                type="submit"
-                className="absolute right-2 h-[80%] my-auto bg-purple-600 text-white rounded-full px-4 flex items-center gap-x-2 border-2 border-purple-600 hover:bg-purple-700 transition-all"
-              >
-                <Search className="w-5 h-5" />
-                <span className="text-sm">Search</span>
-              </button>
-            </div>
-          </form> */}
           <AISearch />
         </div>
 
