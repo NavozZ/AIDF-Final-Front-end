@@ -20,13 +20,13 @@ export const api = createApi({
       });
     },
   }),
-
-  // ✅ Add Hotels here
-  tagTypes: ["Hotels", "Locations", "Booking"],
-
+  tagTypes: ["Hotels", "Locations", "Booking", "UserCount"],
   endpoints: (build) => ({
     getAllHotels: build.query({
-      query: () => "hotels",
+      query: (params) => {
+        const queryString = new URLSearchParams(params).toString();
+        return `hotels?${queryString}`;
+      },
       providesTags: [{ type: "Hotels", id: "LIST" }],
     }),
 
@@ -39,13 +39,15 @@ export const api = createApi({
       query: (id) => `hotels/${id}`,
       providesTags: (result, error, id) => [{ type: "Hotels", id }],
     }),
+
     getBookingCount: build.query({
-      query: () => 'bookings/count', // GET /api/bookings/count
-      providesTags: ['Booking'],
+      query: () => "bookings/count",
+      providesTags: ["Booking"],
     }),
+
     getUserCount: build.query({
-      query: () => 'users/count', // GET /api/users/count (Conceptual API)
-      providesTags: ['UserCount'],
+      query: () => "users/count",
+      providesTags: ["UserCount"],
     }),
 
     createHotel: build.mutation({
@@ -56,9 +58,7 @@ export const api = createApi({
       }),
       invalidatesTags: [{ type: "Hotels", id: "LIST" }],
     }),
-    
 
-    // ✅ New Update Hotel
     updateHotel: build.mutation({
       query: ({ id, hotelData }) => ({
         url: `hotels/${id}`,
@@ -71,7 +71,6 @@ export const api = createApi({
       ],
     }),
 
-    // ✅ New Delete Hotel
     deleteHotel: build.mutation({
       query: (id) => ({
         url: `hotels/${id}`,
@@ -94,7 +93,16 @@ export const api = createApi({
       invalidatesTags: [{ type: "Locations", id: "LIST" }],
     }),
 
-    addReview: build.mutation({ query: (review) => ({ url: "reviews", method: "POST", body: review, }), invalidatesTags: (result, error, id) => [ { type: "Hotels", id: review.hotelId }, ], }),
+    addReview: build.mutation({
+      query: (review) => ({
+        url: "reviews",
+        method: "POST",
+        body: review,
+      }),
+      invalidatesTags: (result, error, review) => [
+        { type: "Hotels", id: review.hotelId },
+      ],
+    }),
 
     createBooking: build.mutation({
       query: (bookingData) => ({
@@ -114,8 +122,7 @@ export const api = createApi({
     }),
 
     getCheckoutSessionStatus: build.query({
-      query: (sessionId) =>
-        `payments/session-status?session_id=${sessionId}`,
+      query: (sessionId) => `payments/session-status?session_id=${sessionId}`,
       providesTags: ["Booking"],
     }),
 
@@ -129,19 +136,17 @@ export const api = createApi({
 export const {
   useGetAllHotelsQuery,
   useGetHotelByIdQuery,
-  useAddLocationMutation,
-  useGetAllLocationsQuery,
-  useAddReviewMutation,
-  useCreateHotelMutation,
-  useCreateBookingMutation,
-  useCreateCheckoutSessionMutation,
-  useGetCheckoutSessionStatusQuery,
-  useGetUserBookingsQuery,
   useGetHotelsBySearchQuery,
-
-  // ✅ Export new hooks
+  useCreateHotelMutation,
   useUpdateHotelMutation,
   useDeleteHotelMutation,
   useGetBookingCountQuery,
   useGetUserCountQuery,
+  useGetAllLocationsQuery,
+  useAddLocationMutation,
+  useAddReviewMutation,
+  useCreateBookingMutation,
+  useCreateCheckoutSessionMutation,
+  useGetCheckoutSessionStatusQuery,
+  useGetUserBookingsQuery,
 } = api;
