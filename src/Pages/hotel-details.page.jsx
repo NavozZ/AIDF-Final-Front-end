@@ -27,7 +27,7 @@ const HotelDetailsPage = () => {
   const [addReview, { isLoading: isAddReviewLoading }] = useAddReviewMutation();
   const [createBooking, { isLoading: isCreateBookingLoading }] = useCreateBookingMutation();
 
-  // NEW: Date state
+
   const [dates, setDates] = useState({ from: undefined, to: undefined });
 
   const handleAddReview = async () => {
@@ -121,7 +121,7 @@ const HotelDetailsPage = () => {
 
           <p className="text-muted-foreground">{hotel.description}</p>
 
-          {/* AMENITIES */}
+          
           <Card>
             <CardContent className="p-4 grid grid-cols-2 gap-4 text-sm">
               <div className="flex items-center"><Wifi className="h-5 w-5 mr-2" /> Free Wi-Fi</div>
@@ -131,12 +131,12 @@ const HotelDetailsPage = () => {
             </CardContent>
           </Card>
 
-          {/* DATE SELECTION - FIX APPLIED HERE */}
+          
           <Card className="p-4">
             <CardContent className="p-0 space-y-4">
               <h2 className="text-xl font-semibold">Select Dates</h2>
 
-              {/* === ACTUAL DATE PICKER IMPLEMENTATION === */}
+             
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
@@ -170,12 +170,12 @@ const HotelDetailsPage = () => {
                     selected={dates}
                     onSelect={setDates}
                     numberOfMonths={2}
-                    // Disable past dates
+                
                     disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
                   />
                 </PopoverContent>
               </Popover>
-              {/* ======================================= */}
+              
               
               <p className="text-center text-sm text-muted-foreground">
                 Check-in: {dates.from ? format(dates.from, "PPP") : "Select Date"} |
@@ -184,7 +184,7 @@ const HotelDetailsPage = () => {
             </CardContent>
           </Card>
 
-          {/* BOOKING SECTION */}
+          
           <div className="flex items-center justify-between">
             <div>
               <p className="text-2xl font-bold">${hotel.price}</p>
@@ -199,7 +199,7 @@ const HotelDetailsPage = () => {
             </Button>
           </div>
 
-          {/* Review Button (kept) */}
+          
           <Button onClick={handleAddReview} disabled={isAddReviewLoading}>
             <PlusCircle className="w-4 h-4" /> Add Review
           </Button>

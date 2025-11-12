@@ -1,4 +1,3 @@
-// src/Pages/booking/complete.page.jsx
 
 import React from 'react';
 import { useSearchParams, Link } from 'react-router';
@@ -12,7 +11,7 @@ const CompletePage = () => {
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get('session_id');
 
-  // Fetches status from GET /api/payments/session-status?session_id=...
+  
   const { data, isLoading, isError } = useGetCheckoutSessionStatusQuery(sessionId, {
     skip: !sessionId,
   });
@@ -60,7 +59,7 @@ const CompletePage = () => {
     );
   }
   
-  // The backend sets paymentStatus to PAID after webhook/polling
+ 
   if (data?.paymentStatus === 'PAID') {
     return (
         <div className="min-h-[60vh] flex items-center justify-center">
@@ -79,7 +78,7 @@ const CompletePage = () => {
     );
   }
 
-  // Fallback for FAILED, EXPIRED, or PENDING state if the webhook hasn't fired yet
+ 
   return (
     <div className="min-h-[60vh] flex items-center justify-center">
         <StatusCard 

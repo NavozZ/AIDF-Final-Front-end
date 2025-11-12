@@ -21,6 +21,10 @@ import PaymentPage from './Pages/booking/payment.page.jsx';
 import CompletePage from './Pages/booking/complete.page.jsx';
 import AccountDashboardPage from './Pages/AccountDashboard.page.jsx';
 import AdminDashboardPage from './Pages/admin/admin-dashboard.page.jsx';
+import AdminHotelsListPage from './Pages/admin/hotels-list.page.jsx';
+import AdminEditHotelPage from './Pages/admin/edit-hotel.page.jsx';
+
+
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
@@ -41,18 +45,13 @@ createRoot(document.getElementById("root")).render(
               <Route path="/hotels" element={<HotelsPage />} />
 
               <Route element={<ProtectLayout />}>
-                {/* ✅ Hotel Details */}
+                
                 <Route path="/hotels/:_id" element={<HotelDetailsPage />} />
-
-                {/* --- TASK 2: ACCOUNT DASHBOARD ROUTE --- */}
                 <Route path="/account" element={<AccountDashboardPage />} />
-                {/* --------------------------------------- */}
-
-                {/* ✅ NEW BOOKING ROUTES */}
+    
                 <Route path="/booking/payment" element={<PaymentPage />} />
                 <Route path="/booking/complete" element={<CompletePage />} />
 
-                {/* ✅ Admin Routes */}
                 <Route element={<AdminProtectLayout />}>
                 <Route path="/admin" element={<AdminDashboardPage />} /> 
                 <Route
@@ -60,6 +59,11 @@ createRoot(document.getElementById("root")).render(
                       element={<CreateHotelPage />}
                              />
                 </Route>
+                <Route path="/admin/hotels" element={<AdminHotelsListPage />} />
+              <Route path="/admin/edit-hotel/:id" element={<AdminEditHotelPage />} />
+              
+
+                
               </Route>
             </Route>
 

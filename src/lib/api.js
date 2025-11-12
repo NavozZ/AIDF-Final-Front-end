@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
@@ -19,78 +20,115 @@ export const api = createApi({
       });
     },
   }),
-  tagTypes: ["Booking"],
+  tagTypes: ["Hotels", "Locations", "Booking", "UserCount"],
   endpoints: (build) => ({
     getAllHotels: build.query({
-      query: () => "hotels",
-    providesTags: (result, error, id) => [{ type: "Hotels", id: "LIST" }],
+      query: (params) => {
+        const queryString = new URLSearchParams(params).toString();
+        return `hotels?${queryString}`;
+      },
+      providesTags: [{ type: "Hotels", id: "LIST" }],
     }),
+
     getHotelsBySearch: build.query({
       query: (search) => `hotels/search?query=${search}`,
       providesTags: (result, error, search) => [{ type: "Hotels", search }],
     }),
+
     getHotelById: build.query({
       query: (id) => `hotels/${id}`,
       providesTags: (result, error, id) => [{ type: "Hotels", id }],
     }),
+
+    getBookingCount: build.query({
+      query: () => "bookings/count",
+      providesTags: ["Booking"],
+    }),
+
+    getUserCount: build.query({
+      query: () => "users/count",
+      providesTags: ["UserCount"],
+    }),
+
     createHotel: build.mutation({
       query: (hotel) => ({
         url: "hotels",
         method: "POST",
         body: hotel,
       }),
-      invalidatesTags: (result, error, id) => [{ type: "Hotels", id: "LIST" }],
+      invalidatesTags: [{ type: "Hotels", id: "LIST" }],
     }),
+
+    updateHotel: build.mutation({
+      query: ({ id, hotelData }) => ({
+        url: `hotels/${id}`,
+        method: "PUT",
+        body: hotelData,
+      }),
+      invalidatesTags: (result, error, { id }) => [
+        { type: "Hotels", id: "LIST" },
+        { type: "Hotels", id },
+      ],
+    }),
+
+    deleteHotel: build.mutation({
+      query: (id) => ({
+        url: `hotels/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [{ type: "Hotels", id: "LIST" }],
+    }),
+
     getAllLocations: build.query({
       query: () => "locations",
-      providesTags: (result, error, id) => [{ type: "Locations", id: "LIST" }],
+      providesTags: [{ type: "Locations", id: "LIST" }],
     }),
+
     addLocation: build.mutation({
       query: (location) => ({
         url: "locations",
         method: "POST",
-        body: {
-          name: location.name,
-        },
+        body: { name: location.name },
       }),
-      invalidatesTags: (result, error, id) => [
-        { type: "Locations", id: "LIST" },
-      ],
+      invalidatesTags: [{ type: "Locations", id: "LIST" }],
     }),
+
     addReview: build.mutation({
       query: (review) => ({
         url: "reviews",
         method: "POST",
         body: review,
       }),
-      invalidatesTags: (result, error, id) => [
+      invalidatesTags: (result, error, review) => [
         { type: "Hotels", id: review.hotelId },
       ],
     }),
+
     createBooking: build.mutation({
       query: (bookingData) => ({
-        url: "bookings", 
+        url: "bookings",
         method: "POST",
         body: bookingData,
       }),
       invalidatesTags: ["Booking"],
     }),
+
     createCheckoutSession: build.mutation({
       query: (data) => ({
-        url: "payments/create-checkout-session", 
+        url: "payments/create-checkout-session",
         method: "POST",
-        body: data, 
+        body: data,
       }),
     }),
-    
-      
+
     getCheckoutSessionStatus: build.query({
       query: (sessionId) => `payments/session-status?session_id=${sessionId}`,
       providesTags: ["Booking"],
     }),
+
     getUserBookings: build.query({
       query: (userId) => `bookings/user/${userId}`,
-      providesTags: ["Booking"], 
+      providesTags: ["Booking"],
     }),
   }),
 });
@@ -98,13 +136,17 @@ export const api = createApi({
 export const {
   useGetAllHotelsQuery,
   useGetHotelByIdQuery,
-  useAddLocationMutation,
-  useGetAllLocationsQuery,
-  useAddReviewMutation,
+  useGetHotelsBySearchQuery,
   useCreateHotelMutation,
+  useUpdateHotelMutation,
+  useDeleteHotelMutation,
+  useGetBookingCountQuery,
+  useGetUserCountQuery,
+  useGetAllLocationsQuery,
+  useAddLocationMutation,
+  useAddReviewMutation,
   useCreateBookingMutation,
   useCreateCheckoutSessionMutation,
   useGetCheckoutSessionStatusQuery,
   useGetUserBookingsQuery,
-  useGetHotelsBySearchQuery,
 } = api;
