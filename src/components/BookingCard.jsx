@@ -1,84 +1,101 @@
-// src/components/BookingCard.jsx
-
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { MapPin, Calendar, Bed, DollarSign, Clock } from 'lucide-react';
+import { MapPin, Calendar, Bed, DollarSign, Clock, CheckCircle2, Clock3 } from 'lucide-react';
 import { format } from 'date-fns';
 
-// Define the component to display individual booking details
 const BookingCard = ({ booking }) => {
-  // Access populated hotel data (assumed to be in booking.hotelId)
   const hotel = booking.hotelId;
-  
-  // Determine status and styling for visual indicator (Task 2.2)
+
+  const nights = booking.checkIn && booking.checkOut
+    ? Math.max(1, Math.round((new Date(booking.checkOut) - new Date(booking.checkIn)) / (1000 * 60 * 60 * 24)))
+    : 1;
+  const totalPrice = hotel?.price ? hotel.price * nights : null;
+
   const isPaid = booking.paymentStatus === 'PAID';
-  const statusVariant = isPaid ? 'default' : 'secondary';
-  const statusText = isPaid ? 'PAID' : 'PENDING';
 
   return (
-    <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
-      <CardContent className="p-4 md:p-6 grid grid-cols-1 md:grid-cols-4 gap-4">
-        
-        {/* COLUMN 1: Hotel Image & Name */}
-        <div className="md:col-span-1">
-          <img
-            src={hotel?.image}
-            alt={hotel?.name}
-            className="w-full h-32 object-cover rounded-md mb-2"
-          />
-          <h3 className="text-lg font-bold truncate">{hotel?.name || 'Hotel Details Missing'}</h3>
-          <p className="text-sm text-muted-foreground flex items-center">
-            <MapPin className="w-4 h-4 mr-1" /> {hotel?.location}
-          </p>
-        </div>
+    <Card className="hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+      <CardContent className="p-0">
+        <div className="grid grid-cols-1 md:grid-cols-4">
 
-        {/* COLUMN 2 & 3: Details */}
-        <div className="md:col-span-2 grid grid-cols-2 gap-4 border-l md:pl-4">
-          <div className="space-y-1">
-            <p className="font-semibold text-sm text-gray-500">CHECK-IN</p>
-            <p className="flex items-center text-md">
-              <Calendar className="w-4 h-4 mr-2" />
-              {format(new Date(booking.checkIn), 'MMM dd, yyyy')}
-            </p>
+          
+          <div className="md:col-span-1 relative">
+            <img
+              src={hotel?.image}
+              alt={hotel?.name}
+              className="w-full h-40 md:h-full object-cover"
+            />
+            
+            <div className={`absolute top-3 left-3 flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full
+              ${isPaid
+                ? 'bg-green-500/90 text-white'
+                : 'bg-yellow-400/90 text-yellow-900'
+              }`}
+            >
+              {isPaid
+                ? <><CheckCircle2 className="w-3 h-3" /> PAID</>
+                : <><Clock3 className="w-3 h-3" /> PENDING</>
+              }
+            </div>
           </div>
-          <div className="space-y-1">
-            <p className="font-semibold text-sm text-gray-500">CHECK-OUT</p>
-            <p className="flex items-center text-md">
-              <Calendar className="w-4 h-4 mr-2" />
-              {format(new Date(booking.checkOut), 'MMM dd, yyyy')}
-            </p>
-          </div>
-          <div className="space-y-1">
-            <p className="font-semibold text-sm text-gray-500">ROOM</p>
-            <p className="flex items-center text-md">
-              <Bed className="w-4 h-4 mr-2" />
-              # {booking.roomNumber}
-            </p>
-          </div>
-          <div className="space-y-1">
-            <p className="font-semibold text-sm text-gray-500">BOOKING DATE</p>
-            <p className="flex items-center text-md">
-              <Clock className="w-4 h-4 mr-2" />
-              {format(new Date(booking.createdAt || Date.now()), 'PPP')}
-            </p>
-          </div>
-        </div>
-        
-        {/* COLUMN 4: Status & Total */}
-        <div className="md:col-span-1 flex flex-col items-start md:items-end justify-between border-l md:pl-4">
-          <Badge variant={statusVariant} className="text-base py-1">
-            {statusText}
-          </Badge>
-          <div className="mt-4 md:mt-0">
-            <p className="font-semibold text-lg flex items-center">
-                <DollarSign className="w-5 h-5 mr-1" /> Total Paid
-            </p>
-            {/* NOTE: Total amount is not in the schema, but is inferred from hotel price * nights */}
-            <p className="text-2xl font-bold text-primary text-right">${hotel?.price * 2 || 'N/A'}</p> 
-          </div>
-        </div>
 
+          
+          <div className="md:col-span-3 p-5 flex flex-col justify-between gap-4">
+
+            
+            <div>
+              <h3 className="text-lg font-bold">{hotel?.name || 'Hotel Details Missing'}</h3>
+              <p className="text-sm text-muted-foreground flex items-center mt-0.5">
+                <MapPin className="w-3.5 h-3.5 mr-1 text-primary" />
+                {hotel?.location}
+              </p>
+            </div>
+
+            
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="space-y-0.5">
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Check-in</p>
+                <p className="flex items-center gap-1.5 text-sm font-medium">
+                  <Calendar className="w-3.5 h-3.5 text-primary" />
+                  {format(new Date(booking.checkIn), 'MMM dd, yyyy')}
+                </p>
+              </div>
+              <div className="space-y-0.5">
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Check-out</p>
+                <p className="flex items-center gap-1.5 text-sm font-medium">
+                  <Calendar className="w-3.5 h-3.5 text-primary" />
+                  {format(new Date(booking.checkOut), 'MMM dd, yyyy')}
+                </p>
+              </div>
+              <div className="space-y-0.5">
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Room</p>
+                <p className="flex items-center gap-1.5 text-sm font-medium">
+                  <Bed className="w-3.5 h-3.5 text-primary" />
+                  #{booking.roomNumber}
+                </p>
+              </div>
+              <div className="space-y-0.5">
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Booked on</p>
+                <p className="flex items-center gap-1.5 text-sm font-medium">
+                  <Clock className="w-3.5 h-3.5 text-primary" />
+                  {format(new Date(booking.createdAt || Date.now()), 'MMM dd, yyyy')}
+                </p>
+              </div>
+            </div>
+            
+            <div className="flex items-end justify-between border-t border-border pt-3">
+              <p className="text-xs text-muted-foreground">{nights} night{nights !== 1 ? 's' : ''}</p>
+              <div className="flex items-baseline gap-1">
+                <DollarSign className="w-4 h-4 text-primary mb-0.5" />
+                <span className="text-2xl font-bold text-primary">
+                  {totalPrice ?? 'N/A'}
+                </span>
+                <span className="text-xs text-muted-foreground">total</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
       </CardContent>
     </Card>
   );

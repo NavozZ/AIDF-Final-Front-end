@@ -1,5 +1,3 @@
-// src/components/CheckoutForm.jsx
-
 import React, { useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router';
 import { loadStripe } from '@stripe/stripe-js';
@@ -8,27 +6,27 @@ import { useAuth } from '@clerk/clerk-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
-// Load the Stripe Publishable key using Vite's env variable
-const stripePromise = loadStripe(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 function CheckoutForm() {
   const [searchParams] = useSearchParams();
   const bookingId = searchParams.get('bookingId');
   const { getToken } = useAuth();
   
-  // NOTE: This assumes you have already set VITE_BACKEND_URL in your .env
-  const BACKEND_URL = "http://localhost:8000"; // Fallback/default URL
+  
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-  // Function to fetch the client secret from the backend API
+  
   const fetchClientSecret = useCallback(async () => {
     if (!bookingId) {
       throw new Error("Missing booking ID in URL.");
     }
     
-    const token = await getToken(); // Get the Clerk JWT for backend authorization
+    const token = await getToken(); 
 
     try {
-      // Calls POST /api/payments/create-checkout-session
+      
       const res = await fetch(
         `${BACKEND_URL}/api/payments/create-checkout-session`,
         {
@@ -47,11 +45,11 @@ function CheckoutForm() {
       }
 
       const data = await res.json();
-      // The backend returns the clientSecret
+      
       return data.clientSecret;
     } catch (error) {
       console.error("Error creating session:", error);
-      throw error; // Propagate error for UI handling
+      throw error; 
     }
   }, [bookingId, getToken, BACKEND_URL]);
 
@@ -76,12 +74,12 @@ function CheckoutForm() {
         <CardTitle className="text-2xl text-center">Secure Payment</CardTitle>
       </CardHeader>
       <CardContent className='pt-0'>
-        {/* Render the Embedded Checkout UI */}
+        
         <div id="checkout">
           <EmbeddedCheckoutProvider 
             stripe={stripePromise} 
             options={options}
-            key={bookingId} // Key ensures re-initialization if bookingId changes
+            key={bookingId} 
           >
             <EmbeddedCheckout />
           </EmbeddedCheckoutProvider>
