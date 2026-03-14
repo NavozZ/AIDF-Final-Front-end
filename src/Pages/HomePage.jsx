@@ -1,6 +1,4 @@
-import { useState, useEffect } from "react";
 import Hero from "../components/Hero";
-import HotelListings from "../components/HotelListings";
 import HotelsView from "../components/HotelsView";
 
 function HomePage() {
