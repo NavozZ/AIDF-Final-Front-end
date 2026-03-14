@@ -71,7 +71,7 @@ const CompletePage = () => {
             >
                 <p className="text-lg font-bold">Booking ID: {data.booking._id}</p>
                 <Button asChild className="bg-primary hover:bg-primary/90">
-                    <Link to="/my-account">View My Account</Link>
+                    <Link to="/account">View My Bookings</Link>
                 </Button>
             </StatusCard>
         </div>

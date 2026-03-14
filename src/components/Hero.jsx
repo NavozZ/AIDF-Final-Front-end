@@ -1,10 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
 import AISearch from "./AISearch";
-import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react"; 
 
 export default function Hero() {
-  const [isTransitioning, setIsTransitioning] = useState(false);
 
 
   return (

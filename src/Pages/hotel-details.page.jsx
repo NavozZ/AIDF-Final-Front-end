@@ -129,9 +129,11 @@ const HotelDetailsPage = () => {
             <img src={hotel.image} alt={hotel.name} className="object-cover rounded-lg w-full h-full" />
           </div>
           <div className="flex gap-2 flex-wrap">
-            <Badge variant="secondary">Rooftop View</Badge>
-            <Badge variant="secondary">French Cuisine</Badge>
-            <Badge variant="secondary">City Center</Badge>
+            <Badge variant="secondary">{hotel.location}</Badge>
+            {hotel.rating && (
+              <Badge variant="secondary">⭐ {hotel.rating} Rated</Badge>
+            )}
+            <Badge variant="secondary">${hotel.price} / night</Badge>
           </div>
         </div>
 

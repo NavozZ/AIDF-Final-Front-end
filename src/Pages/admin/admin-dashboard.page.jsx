@@ -75,11 +75,7 @@ const AdminDashboardPage = () => {
                     </CardHeader>
                     <CardContent>
                         <div className="text-4xl font-bold text-yellow-600 mb-2">{totalBookings}</div>
-                        <p className="text-sm text-muted-foreground">Total Bookings (PENDING/PAID)</p>
-
-                        <Button variant="link" asChild className="p-0 mt-4 text-yellow-600 dark:text-yellow-400">
-                            <Link to="/admin/bookings">View All Bookings</Link>
-                        </Button>
+                        <p className="text-sm text-muted-foreground">Total Bookings (PENDING + PAID)</p>
                     </CardContent>
                 </Card>
 
